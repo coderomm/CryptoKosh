@@ -11,7 +11,7 @@ function App() {
     <>
       <Router>
         <Topbar />
-        <div className="min-h-[90vh] bg-mobile-bg md:bg-desktop-bg bg-cover bg-center">
+        <section className="min-h-[100vh] bg-mobile-bg md:bg-desktop-bg">
           <Header />
           <main>
             <Routes>
@@ -19,7 +19,7 @@ function App() {
               <Route path='/generate-mnemonic' element={<WalletManager />} />
             </Routes>
           </main>
-        </div>
+        </section>
         <Footer />
       </Router>
     </>

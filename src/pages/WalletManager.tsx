@@ -10,6 +10,7 @@ import process from 'process';
 
 window.Buffer = Buffer;
 window.process = process;
+window.Crypto = Crypto;
 
 function WalletManager() {
   const [mnemonic, setMnemonic] = useState<string>('');
@@ -33,19 +34,22 @@ function WalletManager() {
     const mnemonicWords = generateMnemonic();
     setMnemonic(mnemonicWords);
     console.log("Generated Mnemonic:", mnemonicWords)
-    const seed = mnemonicToSeedSync(mnemonicWords);
+    const seedBuffer = mnemonicToSeedSync(mnemonicWords);
 
     if (blockchain === 'solana') {
       const path = "m/44'/501'/0'/0'";
-      const derivedSeed = derivePath(path, seed.toString('hex')).key;
-      const secretKey = nacl.sign.keyPair.fromSeed(derivedSeed).secretKey;
+      const { key: derivedSeed } = derivePath(path, seedBuffer.toString('hex'));
+      const { secretKey } = nacl.sign.keyPair.fromSeed(derivedSeed);
       const keypair = Keypair.fromSecretKey(secretKey);
-
+      console.log('path:', path)
+      console.log('derivedSeed:', derivedSeed)
+      console.log('secretKey:', secretKey)
       setPrivateKeys(Buffer.from(keypair.secretKey).toString('hex'))
       setPublicKey(keypair.publicKey.toBase58());
+
     } else if (blockchain === 'ethereum') {
-      const path = "m/44'/60'/0'/0/0";
-      const derivedSeed = derivePath(path, seed.toString('hex')).key;
+      const path = "m/44'/60'/0'/0'";
+      const derivedSeed = derivePath(path, seedBuffer.toString('hex')).key;
       const privateKey = Buffer.from(derivedSeed).toString('hex')
       const wallet = new ethers.Wallet(privateKey)
 

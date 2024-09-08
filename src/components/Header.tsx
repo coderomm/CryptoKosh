@@ -13,7 +13,7 @@ function Header() {
         <>
             <header className="flex items-center justify-between border-b border-[#121212f2] text-black backdrop-blur-xl sticky
             rounded-b-[35px] px-3 md:px-20 py-4">
-                <div onClick={handleRedirectToHome} className="flex items-center justify-start gap-1">
+                <div onClick={handleRedirectToHome} className="flex items-center justify-start gap-1 cursor-pointer">
                     <img src={CryptoKoshLogo} className='w-10 h-w-10' />
                     <h1 className="font-bold text-2xl">CryptoKosh</h1>
                 </div>
