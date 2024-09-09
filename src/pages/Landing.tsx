@@ -14,8 +14,9 @@ function Landing() {
                     <p className="text-black font-semibold text-lg md:text-xl">Choose a blockchain to get started.</p>
                 </div>
                 <div className="flex items-center justify-center flex-col md:flex-row gap-3">
-                    <button className="shadow-2xl shadow-neutral-800 border text-base bg-custom-gradient hover:bg-custom-gradient-none text-white hover:bg-white font-bold hover:text-black rounded-full py-3 px-[18px] w-full md:w-56
-                    uppercase text-center" onClick={() => handleNavigation('solana')}>
+                    <button className="shadow-2xl shadow-neutral-800 border text-base bg-custom-gradient text-white font-bold
+                    rounded-full py-3 px-[18px] w-full uppercase text-center
+                    hover:bg-custom-gradient-none hover:bg-white hover:text-black md:w-56" onClick={() => handleNavigation('solana')}>
                         Solana
                     </button>
                     <button className="shadow-2xl shadow-neutral-800 border text-base hover:bg-custom-gradient-none text-black hover:bg-white font-bold hover:text-black rounded-full py-3 px-[18px] w-full md:w-56

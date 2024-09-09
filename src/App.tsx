@@ -11,7 +11,7 @@ function App() {
     <>
       <Router>
         <Topbar />
-        <section className="min-h-[100vh] bg-mobile-bg md:bg-desktop-bg">
+        <section className="min-h-[100vh] bg-mobile-bg md:bg-desktop-bg bg-cover bg-center">
           <Header />
           <main>
             <Routes>
