@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 function Landing() {
     const navigate = useNavigate();
@@ -16,11 +17,18 @@ function Landing() {
                 <div className="flex items-center justify-center flex-col md:flex-row gap-3">
                     <button className="shadow-2xl shadow-neutral-800 border text-base bg-custom-gradient text-white font-bold
                     rounded-full py-3 px-[18px] w-full uppercase text-center
-                    hover:bg-custom-gradient-none hover:bg-white hover:text-black md:w-56" onClick={() => handleNavigation('solana')}>
+                    hover:bg-custom-gradient-none hover:bg-white hover:text-black md:w-56"
+                        onClick={() => {
+                            handleNavigation('solana')
+                            toast.success("Solana selected. Generate a wallet to continue.")
+                        }}>
                         Solana
                     </button>
                     <button className="shadow-2xl shadow-neutral-800 border text-base hover:bg-custom-gradient-none text-black hover:bg-white font-bold hover:text-black rounded-full py-3 px-[18px] w-full md:w-56
-                    uppercase text-center" onClick={() => handleNavigation('ethereum')}>
+                    uppercase text-center" onClick={() => {
+                            handleNavigation('ethereum')
+                            toast.success("Ethereum selected. Generate a wallet to continue.")
+                        }}>
                         Ethereum
                     </button>
                 </div>

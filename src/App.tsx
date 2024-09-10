@@ -5,12 +5,14 @@ import Header from './components/Header'
 import Topbar from './components/Topbar'
 import Landing from './pages/Landing'
 import WalletManager from './pages/WalletManager'
+import { Toaster } from 'sonner';
 
 function App() {
   return (
     <>
       <Router>
         <Topbar />
+        <Toaster />
         <section className="min-h-[100vh] bg-mobile-bg md:bg-desktop-bg bg-cover bg-center">
           <Header />
           <main>
