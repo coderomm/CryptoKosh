@@ -10,3 +10,6 @@
 .bg-img{
     background-image: url('/desktopbg.png');
 }
+.mnemonic-pill{
+    backdrop-filter: 10px;
+}

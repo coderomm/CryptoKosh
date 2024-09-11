@@ -22,17 +22,36 @@ interface Wallet {
 }
 
 function WalletManager() {
-  const [mnemonicWords, setMnemonicWords] = useState<string[]>([]);
-  const [mnemonicWordsInput, setMnemonicWordsInput] = useState<string>('')
-  const [wallets, setWallets] = useState<Wallet[]>([]);
+  const [mnemonicWords, setMnemonicWords] = useState<string[]>(() => {
+    const savedMnemonic = localStorage.getItem('mnemonicWords');
+    return savedMnemonic ? JSON.parse(savedMnemonic) : [];
+  });
+  const [mnemonicWordsInput, setMnemonicWordsInput] = useState<string>(() => localStorage.getItem('mnemonicWordsInput') || '')
+  const [wallets, setWallets] = useState<Wallet[]>(() => {
+    const savedWallets = localStorage.getItem('wallets');
+    return savedWallets ? JSON.parse(savedWallets) : [];
+  });
   // const [privateKeys, setPrivateKeys] = useState<string>();
   // const [publicKey, setPublicKey] = useState<string>('');
-  const [blockchain, setBlockchain] = useState<string>('');
+  const [blockchain, setBlockchain] = useState<string>(() => localStorage.getItem('blockchain') || '');
   const [isCopied, setIsCopied] = useState(false)
   const [showPrivateKey, setShowPrivateKey] = useState(false);
   const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    localStorage.setItem('wallets', JSON.stringify(wallets));
+  }, [wallets])
+
+  useEffect(() => {
+    localStorage.setItem('blockchain', JSON.stringify(blockchain))
+  }, [blockchain])
+
+  useEffect(() => {
+    localStorage.setItem('mnemonicWords', JSON.stringify(mnemonicWords));
+    localStorage.setItem('mnemonicWordsInput', mnemonicWordsInput);
+  }, [mnemonicWords, mnemonicWordsInput]);
 
   useEffect(() => {
     const blockchainParam = searchParams.get('blockchain');
@@ -171,6 +190,10 @@ function WalletManager() {
       setMnemonicWords([]);
       setMnemonicWordsInput('');
       setBlockchain('');
+      localStorage.removeItem('wallets')
+      localStorage.removeItem('blockchain')
+      localStorage.removeItem('mnemonicWords')
+      localStorage.removeItem('mnemonicWordsInput')
       navigate('/', { replace: true });
     }
     toast.success('Wallet deleted successfully!')
@@ -181,6 +204,10 @@ function WalletManager() {
     setMnemonicWords([]);
     setMnemonicWordsInput('');
     setBlockchain('');
+    localStorage.removeItem('wallets')
+    localStorage.removeItem('blockchain')
+    localStorage.removeItem('mnemonicWords')
+    localStorage.removeItem('mnemonicWordsInput')
     toast.success('All wallets deleted successfully!')
     navigate('/', { replace: true });
   }
@@ -191,15 +218,15 @@ function WalletManager() {
         <div className="flex flex-col gap-3 md:gap-10">
           {!mnemonicWords.length &&
             <>
-              <div className="flex flex-col gap-3 text-black text-center">
+              <div className="flex flex-col gap-3 text-white text-center">
                 <h1 className="text-4xl md:text-5xl text-center font-bold md:font-semibold">
                   Secret Recovery Phrase
                 </h1>
-                <p className="text-black font-semibold text-lg md:text-xl">Save these words in a safe place.</p>
+                <p className="text-white font-semibold text-lg md:text-xl">Save these words in a safe place.</p>
               </div>
               <div className="flex items-center justify-center flex-col md:flex-row gap-3">
                 <input className='shadow-2xl shadow-neutral-800 bg-white border border-black rounded-full py-3 px-[18px] 
-                  w-full text-black' type='password' placeholder='Enter your mnemonic phrase (or leave blank to generate a new one)'
+                  w-full text-white' type='password' placeholder='Enter your mnemonic phrase (or leave blank to generate a new one)'
                   onChange={(e) => {
                     setMnemonicWordsInput(e.target.value)
                   }}
@@ -207,7 +234,7 @@ function WalletManager() {
 
                 <button onClick={() => {
                   handleGenerateMnemonic()
-                }} className="shadow-2xl shadow-neutral-800 border text-base hover:bg-custom-gradient-none text-black 
+                }} className="shadow-2xl shadow-neutral-800 border text-base hover:bg-custom-gradient-none text-white 
                 hover:bg-white font-bold hover:text-black rounded-full py-3 px-[18px] w-full md:w-64 uppercase text-center">
                   {mnemonicWordsInput ? 'Add Wallet' : 'Generate Wallet'}
                 </button>
@@ -216,10 +243,10 @@ function WalletManager() {
 
           {mnemonicWords.length > 0 && (
             <div className="mt-10 text-center flex items-center justify-center gap-2 flex-col">
-              <h1 className="text-4xl md:text-5xl text-center font-bold md:font-semibold">
+              <h1 className="text-4xl md:text-5xl text-center font-bold md:font-semibold text-white">
                 Generated Mnemonic Phrase:
               </h1>
-              <p className="text-black font-semibold text-lg md:text-xl">Save these words in a safe place.</p>
+              <p className="text-white font-semibold text-lg md:text-xl">Save these words in a safe place.</p>
               <button onClick={copyMnemonic} className={`mx-auto shadow-2xl shadow-neutral-800 border text-base bg-custom-gradient text-white 
               rounded-full py-2 px-[18px] w-full font-bold flex items-center justify-center gap-3 text-center transition-transform 
               duration-300 hover:bg-custom-gradient-none hover:bg-white hover:text-black md:w-56
@@ -231,53 +258,56 @@ function WalletManager() {
                   </>
                 )}
               </button>
-              <div className="shadow-2xl shadow-neutral-800 p-5 rounded-md grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 justify-center w-full md:w-[70%] items-center mx-auto mt-3">
+              <div className="shadow-2xl shadow-neutral-800 p-5 rounded-md grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 justify-center w-full md:w-[85%] items-center mx-auto mt-3">
                 {mnemonicWords.map((word, index) => (
-                  <p key={index} className="text-base md:text-lg bg-white text-black font-bold rounded-lg py-2 px-3">{word}</p>
+                  <p key={index} className="mnemonic-pill text-base md:text-lg bg-white/30 text-white font-bold rounded-lg py-2 px-3 backdrop-blur-lg backdrop-saturate-150 shadow-lg">{word}</p>
                 ))}
               </div>
             </div>
           )}
           {wallets.length > 0 && (
-            <div className="flex flex-col mt-5 gap-4">
-              <div className="flex flex-col md:flex-row gap-5 md:gap-0 items-center justify-between">
-                <h2 className="text-black text-4xl font-bold capitalize">{blockchain} Wallet</h2>
-                <div className="flex items-center justify-center gap-3">
-                  <button onClick={AddNewWallet} className='bg-gray-800 text-white rounded-full text-base px-4 py-2 font-bold shadow-2xl shadow-neutral-800
-                   hover:bg-gray-950
+            <><hr />
+              <div className="flex flex-col mt-5 gap-4">
+                <div className="flex flex-col md:flex-row gap-5 md:gap-0 items-center justify-between">
+                  <h2 className="text-white text-4xl font-bold capitalize">Your {blockchain} Wallet{wallets.length > 1 ? 's' : ''}</h2>
+                  <div className="flex items-center justify-center gap-3">
+                    <button onClick={AddNewWallet} className='bg-white text-black rounded-full text-base px-4 py-2 font-bold
+                  shadow-2xl shadow-neutral-800 hover:bg-white 
                   transition-all duration-200 ease-out flex items-center justify-center gap-2'><Plus /> Add Wallet</button>
-                  <button onClick={removeAllWallets} className='bg-white text-black rounded-full text-base px-4 py-2 font-bold
+                    <button onClick={removeAllWallets} className='bg-white text-black rounded-full text-base px-4 py-2 font-bold
                   shadow-2xl shadow-neutral-800 hover:bg-white 
                   transition-all duration-200 ease-out flex items-center justify-center gap-2'><Trash /> Clear Wallets</button>
-                </div>
-              </div>
-              {wallets.map((wallet, index) => (
-                <div key={index} className="flex flex-col rounded-2xl border border-black mt-8">
-                  <div className="flex justify-between px-8 py-6">
-                    <h3 className="font-bold text-2xl md:text-3xl tracking-tighter">Wallet {index + 1}</h3>
-                    <button onClick={() => removeWallet(index)} className="text-red-500 px-4 py-2" type="button"><Trash /></button>
                   </div>
-                  <div className="flex flex-col gap-8 px-8 py-4 rounded-2xl bg-secondary/50">
-                    <div className="flex flex-col w-full gap-2">
-                      <span className="text-lg md:text-xl font-bold tracking-tighter">Public Key</span>
-                      <p className="text-primary/80 font-medium cursor-pointer hover:text-primary transition-all duration-300 truncate 
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4">
+                  {wallets.map((wallet, index) => (
+                    <div key={index} className="flex flex-col rounded-2xl border border-black bg-gray-300">
+                      <div className="bg-gray-300 rounded-t-2xl flex justify-between px-6 py-4">
+                        <h3 className="font-bold text-2xl md:text-3xl tracking-tighter">Wallet {index + 1}</h3>
+                        <button onClick={() => removeWallet(index)} className="text-red-500 px-4 py-2" type="button"><Trash /></button>
+                      </div>
+                      <div className="bg-white flex flex-col gap-4 px-8 py-4 rounded-2xl">
+                        <div className="flex flex-col w-full gap-2">
+                          <span className="text-lg md:text-xl font-bold tracking-tighter">Public Key</span>
+                          <p className="text-primary/80 font-medium cursor-pointer hover:text-primary transition-all duration-300 truncate 
                     overflow-hidden">{wallet.publicKey}</p>
-                    </div>
-                    <div className="flex flex-col w-full gap-2">
-                      <span className="text-lg md:text-xl font-bold tracking-tighter">Private Key</span>
-                      <div className="flex justify-between w-full items-center gap-2">
-                        <p className="text-primary/80 font-medium cursor-pointer hover:text-primary transition-all duration-300 truncate">
-                          {showPrivateKey ? wallet.privateKey : '••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••'}
-                        </p>
-                        <button onClick={togglePrivateKeyVisibility} className="px-4 py-2">
-                          {showPrivateKey ? <Eye /> : <EyeOff />}
-                        </button>
+                        </div>
+                        <div className="flex flex-col w-full gap-2">
+                          <span className="text-lg md:text-xl font-bold tracking-tighter">Private Key</span>
+                          <div className="flex justify-between w-full items-center gap-2">
+                            <p className="text-primary/80 font-medium cursor-pointer hover:text-primary transition-all duration-300 truncate">
+                              {showPrivateKey ? wallet.privateKey : '••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••'}
+                            </p>
+                            <button onClick={togglePrivateKeyVisibility} className="px-4 py-2">
+                              {showPrivateKey ? <Eye /> : <EyeOff />}
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div></>
           )}
         </div>
       </section >

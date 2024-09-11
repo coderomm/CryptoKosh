@@ -9,10 +9,9 @@ function Landing() {
     return (
         <section className="px-3 py-4 md:max-w-[70%] mx-auto">
             <div className="flex flex-col gap-3 md:gap-10 mt-20">
-                <div className="flex flex-col gap-3 text-black text-center">
-                    <h1 className="text-4xl md:text-5xl text-center font-bold md:font-semibold">
-                        CryptoKosh supports multiple blockchains</h1>
-                    <p className="text-black font-semibold text-lg md:text-xl">Choose a blockchain to get started.</p>
+                <div className="flex flex-col gap-3 text-white text-center">
+                    <h1 className="text-4xl md:text-5xl text-center font-bold md:font-semibold">Explore Multiple Blockchains with CryptoKosh</h1>
+                    <p className="text-white text-lg md:text-xl">Discover and choose your preferred blockchain to start managing your wallets.</p>
                 </div>
                 <div className="flex items-center justify-center flex-col md:flex-row gap-3">
                     <button className="shadow-2xl shadow-neutral-800 border text-base bg-custom-gradient text-white font-bold
@@ -24,7 +23,7 @@ function Landing() {
                         }}>
                         Solana
                     </button>
-                    <button className="shadow-2xl shadow-neutral-800 border text-base hover:bg-custom-gradient-none text-black hover:bg-white font-bold hover:text-black rounded-full py-3 px-[18px] w-full md:w-56
+                    <button className="shadow-2xl shadow-neutral-800 border text-base hover:bg-custom-gradient-none text-white hover:bg-white font-bold hover:text-black rounded-full py-3 px-[18px] w-full md:w-56
                     uppercase text-center" onClick={() => {
                             handleNavigation('ethereum')
                             toast.success("Ethereum selected. Generate a wallet to continue.")

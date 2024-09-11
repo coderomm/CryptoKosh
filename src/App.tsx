@@ -13,7 +13,7 @@ function App() {
       <Router>
         <Topbar />
         <Toaster />
-        <section className="min-h-[100vh] bg-mobile-bg md:bg-desktop-bg bg-cover bg-center">
+        <section className="min-h-[90vh] bg-gradient-to-bl from-black via-teal-900 to-purple-900">
           <Header />
           <main>
             <Routes>
