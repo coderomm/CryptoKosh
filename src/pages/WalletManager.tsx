@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import nacl from "tweetnacl";
 import { generateMnemonic, mnemonicToSeedSync, validateMnemonic } from "bip39";
 import { derivePath } from "ed25519-hd-key";
@@ -30,6 +30,7 @@ function WalletManager() {
   const [blockchain, setBlockchain] = useState<string>('');
   const [isCopied, setIsCopied] = useState(false)
   const [showPrivateKey, setShowPrivateKey] = useState(false);
+  const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
 
@@ -166,12 +167,22 @@ function WalletManager() {
   const removeWallet = (i: number) => {
     const updatedWallets = wallets.filter((_, walletIndex) => walletIndex !== i);
     setWallets(updatedWallets);
+    if (updatedWallets.length === 0) {
+      setMnemonicWords([]);
+      setMnemonicWordsInput('');
+      setBlockchain('');
+      navigate('/', { replace: true });
+    }
     toast.success('Wallet deleted successfully!')
   }
 
   const removeAllWallets = () => {
     setWallets([]);
+    setMnemonicWords([]);
+    setMnemonicWordsInput('');
+    setBlockchain('');
     toast.success('All wallets deleted successfully!')
+    navigate('/', { replace: true });
   }
 
   return (
@@ -188,7 +199,7 @@ function WalletManager() {
               </div>
               <div className="flex items-center justify-center flex-col md:flex-row gap-3">
                 <input className='shadow-2xl shadow-neutral-800 bg-white border border-black rounded-full py-3 px-[18px] 
-                  w-full text-black' type='password' placeholder='Enter your secret phrase (or leave blank to generate)'
+                  w-full text-black' type='password' placeholder='Enter your mnemonic phrase (or leave blank to generate a new one)'
                   onChange={(e) => {
                     setMnemonicWordsInput(e.target.value)
                   }}
