@@ -9,9 +9,6 @@
     font-family: "Mulish", sans-serif;
     font-optical-sizing: auto;
   }
-.bg-img{
-    background-image: url('/desktopbg.png');
-}
 .mnemonic-pill{
     backdrop-filter: 10px;
 }
