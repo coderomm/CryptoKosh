@@ -6,7 +6,9 @@
     padding: 0%;
     margin: 0%;
     box-sizing: border-box;
-}
+    font-family: "Mulish", sans-serif;
+    font-optical-sizing: auto;
+  }
 .bg-img{
     background-image: url('/desktopbg.png');
 }
