@@ -31,8 +31,6 @@ function WalletManager() {
     const savedWallets = localStorage.getItem('wallets');
     return savedWallets ? JSON.parse(savedWallets) : [];
   });
-  // const [privateKeys, setPrivateKeys] = useState<string>();
-  // const [publicKey, setPublicKey] = useState<string>('');
   const [blockchain, setBlockchain] = useState<string>(() => localStorage.getItem('blockchain') || '');
   const [isCopied, setIsCopied] = useState(false)
   const [showPrivateKey, setShowPrivateKey] = useState(false);
@@ -41,22 +39,21 @@ function WalletManager() {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    localStorage.setItem('wallets', JSON.stringify(wallets));
-  }, [wallets])
-
-  useEffect(() => {
-    localStorage.setItem('blockchain', JSON.stringify(blockchain))
-  }, [blockchain])
-
-  useEffect(() => {
-    localStorage.setItem('mnemonicWords', JSON.stringify(mnemonicWords));
-    localStorage.setItem('mnemonicWordsInput', mnemonicWordsInput);
-  }, [mnemonicWords, mnemonicWordsInput]);
+    if (wallets.length > 0 && mnemonicWords.length > 0 && blockchain) {
+      localStorage.setItem('wallets', JSON.stringify(wallets));
+      localStorage.setItem('mnemonicWords', JSON.stringify(mnemonicWords));
+      localStorage.setItem('mnemonicWordsInput', mnemonicWordsInput);
+      localStorage.setItem('blockchain', blockchain);
+    }
+  }, [wallets, mnemonicWords, mnemonicWordsInput, blockchain]);
 
   useEffect(() => {
     const blockchainParam = searchParams.get('blockchain');
     if (blockchainParam && ['solana', 'ethereum'].includes(blockchainParam)) {
       setBlockchain(blockchainParam);
+      setMnemonicWords([]);
+      setMnemonicWordsInput('');
+      setWallets([]);
     } else {
       toast.error('Invalid blockchain. Please select Solana or Ethereum.');
     }
@@ -87,8 +84,6 @@ function WalletManager() {
         const { key: derivedSeed } = derivePath(path, seed.toString('hex'));
         const { secretKey } = nacl.sign.keyPair.fromSeed(derivedSeed);
         const keypair = Keypair.fromSecretKey(secretKey);
-        // setPrivateKeys(Buffer.from(keypair.secretKey).toString('hex'))
-        // setPublicKey(keypair.publicKey.toBase58());
 
         const newWallet: Wallet = {
           publicKey: keypair.publicKey.toBase58(),
@@ -96,7 +91,6 @@ function WalletManager() {
           mnemonic,
           path
         }
-        // setWallets([...wallets, newWallet]);
         setWallets((prevWallets) => [...prevWallets, newWallet]);
 
         toast.success("Wallet generated successfully!")
@@ -107,16 +101,12 @@ function WalletManager() {
         const privateKey = Buffer.from(derivedSeed).toString('hex')
         const wallet = new ethers.Wallet(privateKey)
 
-        // setPrivateKeys(privateKey);
-        // setPublicKey(wallet.address);
-
         const newWallet: Wallet = {
           publicKey: wallet.address,
           privateKey,
           mnemonic,
           path,
         };
-        // setWallets([...wallets, newWallet]);
         setWallets((prevWallets) => [...prevWallets, newWallet]);
         toast.success("Wallet generated successfully!")
       }
