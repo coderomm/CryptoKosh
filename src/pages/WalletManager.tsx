@@ -138,6 +138,18 @@ function WalletManager() {
     }
   }
 
+  const handleCopyKey = (key: string) => {
+    if (!key) {
+      toast.error("Key not exist. Internal Error");
+    }
+    else {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(key);
+        toast.success('Key coppied successfully!')
+      }
+    }
+  }
+
   const togglePrivateKeyVisibility = () => {
     setShowPrivateKey(!showPrivateKey);
   }
@@ -269,38 +281,46 @@ function WalletManager() {
             <><hr />
               <div className="flex flex-col mt-5 gap-4">
                 <div className="flex flex-col md:flex-row gap-5 md:gap-0 items-center justify-between">
-                  <h2 className="text-white text-4xl font-bold capitalize">Your {blockchain} Wallet{wallets.length > 1 ? 's' : ''}</h2>
+                  <h2 className="text-white text-3xl md:text-4xl font-bold capitalize">Your {blockchain} Wallet{wallets.length > 1 ? 's' : ''}</h2>
                   <div className="flex items-center justify-center gap-3">
-                    <button onClick={AddNewWallet} className='bg-white text-black rounded-full text-base px-4 py-2 font-bold
+                    <button onClick={AddNewWallet} className='bg-white text-black rounded-full text- md:text-base px-4 py-2 font-bold
                   shadow-2xl shadow-neutral-800 hover:bg-white 
                   transition-all duration-200 ease-out flex items-center justify-center gap-2'><Plus /> Add Wallet</button>
-                    <button onClick={removeAllWallets} className='bg-white text-black rounded-full text-base px-4 py-2 font-bold
+                    <button onClick={removeAllWallets} className='bg-white text-black rounded-full text- md:text-base px-4 py-2 font-bold
                   shadow-2xl shadow-neutral-800 hover:bg-white 
                   transition-all duration-200 ease-out flex items-center justify-center gap-2'><Trash /> Clear Wallets</button>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-1 md:p-4">
                   {wallets.map((wallet, index) => (
                     <div key={index} className="flex flex-col rounded-2xl border border-black bg-gray-300">
                       <div className="bg-gray-300 rounded-t-2xl flex justify-between px-6 py-4">
                         <h3 className="font-bold text-2xl md:text-3xl tracking-tighter">Wallet {index + 1}</h3>
                         <button onClick={() => removeWallet(index)} className="text-red-500 px-4 py-2" type="button"><Trash /></button>
                       </div>
-                      <div className="bg-white flex flex-col gap-4 px-8 py-4 rounded-2xl">
-                        <div className="flex flex-col w-full gap-2">
+                      <div className="bg-white flex flex-col gap-4 p-3 md:px-8 md:py-4 rounded-2xl">
+                        <div className="flex flex-col w-full gap-1">
                           <span className="text-lg md:text-xl font-bold tracking-tighter">Public Key</span>
-                          <p className="text-primary/80 font-medium cursor-pointer hover:text-primary transition-all duration-300 truncate 
+                          <div className="flex justify-between w-full items-center gap-2">
+                            <p onClick={() => handleCopyKey(wallet.privateKey)} className="text-primary/80 font-medium cursor-pointer hover:text-primary transition-all duration-300 truncate 
                     overflow-hidden">{wallet.publicKey}</p>
+                            <button onClick={() => handleCopyKey(wallet.publicKey)} className="p-2">
+                              <Copy className='transition-transform transform active:scale-95' />
+                            </button>
+                          </div>
                         </div>
-                        <div className="flex flex-col w-full gap-2">
+                        <div className="flex flex-col w-full gap-1">
                           <span className="text-lg md:text-xl font-bold tracking-tighter">Private Key</span>
                           <div className="flex justify-between w-full items-center gap-2">
-                            <p className="text-primary/80 font-medium cursor-pointer hover:text-primary transition-all duration-300 truncate">
-                              {showPrivateKey ? wallet.privateKey : '••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••'}
+                            <p onClick={() => handleCopyKey(wallet.privateKey)} className="text-primary/80 font-medium cursor-pointer hover:text-primary transition-all duration-300 truncate">
+                              {showPrivateKey ? wallet.privateKey : '•••••••••••••••••••••••••••••••••••••••••••••••••••'}
                             </p>
-                            <button onClick={togglePrivateKeyVisibility} className="px-4 py-2">
-                              {showPrivateKey ? <Eye /> : <EyeOff />}
-                            </button>
+                            <div className="flex items-center justify-center gap-1">
+                              <button onClick={togglePrivateKeyVisibility} className="p-1 md:p-2">
+                                {showPrivateKey ? <Eye /> : <EyeOff />}
+                              </button>
+                              <button onClick={() => handleCopyKey(wallet.privateKey)} className="p-1 md:p-2"><Copy className='transition-transform transform active:scale-95' /></button>
+                            </div>
                           </div>
                         </div>
                       </div>
