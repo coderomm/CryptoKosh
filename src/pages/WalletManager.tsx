@@ -228,7 +228,7 @@ function WalletManager() {
               </div>
               <div className="flex items-center justify-center flex-col md:flex-row gap-3">
                 <input className='shadow-2xl shadow-neutral-800 bg-white border border-black rounded-full py-3 px-[18px] 
-                  w-full text-white' type='password' placeholder='Enter your mnemonic phrase (or leave blank to generate a new one)'
+                  w-full text-black' type='password' placeholder='Enter your mnemonic phrase (or leave blank to generate a new one)'
                   onChange={(e) => {
                     setMnemonicWordsInput(e.target.value)
                   }}
