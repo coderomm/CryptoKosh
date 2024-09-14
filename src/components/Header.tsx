@@ -18,7 +18,7 @@ function Header() {
                     <h1 className="font-bold text-2xl">CryptoKosh</h1>
                 </div>
                 <div className="flex items-center justify-end">
-                    <button
+                <button
                         className="flex items-center justify-center gap-2 group text-base bg-custom-gradient hover:bg-custom-gradient-none text-white hover:bg-white hover:fill-black hover:text-black rounded-full py-2 px-[18px]  transition-colors duration-100 ease-out"
                         onClick={handleRedirect}
                     >

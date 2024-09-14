@@ -11,7 +11,7 @@ function Landing() {
             <div className="flex flex-col gap-3 md:gap-10 mt-20">
                 <div className="flex flex-col gap-3 text-white text-center">
                     <h1 className="text-4xl md:text-5xl text-center font-bold md:font-semibold">Explore Multiple Blockchains with CryptoKosh</h1>
-                    <p className="text-white text-lg md:text-xl">Discover and choose your preferred blockchain to start managing your wallets.</p>
+                    {/* <p className="text-white text-lg md:text-xl">Discover and choose your preferred blockchain to start managing your wallets.</p> */}
                 </div>
                 <div className="flex items-center justify-center flex-col md:flex-row gap-3">
                     <button className="shadow-2xl shadow-neutral-800 border text-base bg-custom-gradient text-white font-bold
@@ -31,6 +31,7 @@ function Landing() {
                         Ethereum
                     </button>
                 </div>
+                <div className="pointer-events-none fixed top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 w-52 h-28 bg-fuchsia-500/80 blur-[120px]"></div>
             </div>
         </section>
     )

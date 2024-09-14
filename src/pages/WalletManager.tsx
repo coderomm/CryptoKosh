@@ -9,6 +9,7 @@ import { Buffer } from "buffer";
 import process from 'process';
 import { Copy, Eye, EyeOff, Plus, Trash } from 'lucide-react';
 import { toast } from 'sonner';
+import CollapsibleMnemonicWords from '../components/CollapsibleMnemonicWords';
 
 window.Buffer = Buffer;
 window.process = process;
@@ -216,7 +217,8 @@ function WalletManager() {
 
   return (
     <>
-      <section className="px-3 py-4 md:max-w-[90%] mx-auto">
+      <section className="px-3 py-4 md:max-w-[90%] mx-auto mt-5 md:mt-10">
+        <div className="pointer-events-none fixed top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 w-52 h-28 bg-fuchsia-500/80 blur-[120px]"></div>
         <div className="flex flex-col gap-3 md:gap-10">
           {!mnemonicWords.length &&
             <>
@@ -227,7 +229,7 @@ function WalletManager() {
                 <p className="text-white font-semibold text-lg md:text-xl">Save these words in a safe place.</p>
               </div>
               <div className="flex items-center justify-center flex-col md:flex-row gap-3">
-                <input className='shadow-2xl shadow-neutral-800 bg-white border border-black rounded-full py-3 px-[18px] 
+                <input className='bg-transparent border border-[#27272a] rounded-lg py-3 px-[18px] 
                   w-full text-black' type='password' placeholder='Enter your mnemonic phrase (or leave blank to generate a new one)'
                   onChange={(e) => {
                     setMnemonicWordsInput(e.target.value)
@@ -236,15 +238,15 @@ function WalletManager() {
 
                 <button onClick={() => {
                   handleGenerateMnemonic()
-                }} className="shadow-2xl shadow-neutral-800 border text-base hover:bg-custom-gradient-none text-white 
-                hover:bg-white font-bold hover:text-black rounded-full py-3 px-[18px] w-full md:w-64 uppercase text-center">
+                }} className="border text-base hover:bg-custom-gradient-none text-white 
+                hover:bg-white font-bold hover:text-black rounded-lg py-3 px-[18px] w-full md:w-64 uppercase text-center">
                   {mnemonicWordsInput ? 'Add Wallet' : 'Generate Wallet'}
                 </button>
               </div>
             </>}
 
           {mnemonicWords.length > 0 && (
-            <div className="mt-10 text-center flex items-center justify-center gap-2 flex-col">
+            <div className="text-center flex items-center justify-center gap-2 flex-col">
               <h1 className="text-4xl md:text-5xl text-center font-bold md:font-semibold text-white">
                 Generated Mnemonic Phrase:
               </h1>
@@ -260,11 +262,7 @@ function WalletManager() {
                   </>
                 )}
               </button>
-              <div className="shadow-2xl shadow-neutral-800 p-5 rounded-md grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 justify-center w-full md:w-[85%] items-center mx-auto mt-3">
-                {mnemonicWords.map((word, index) => (
-                  <p key={index} className="mnemonic-pill text-base md:text-lg bg-white/30 text-white font-bold rounded-lg py-2 px-3 backdrop-blur-lg backdrop-saturate-150 shadow-lg">{word}</p>
-                ))}
-              </div>
+              <CollapsibleMnemonicWords mnemonicWords={mnemonicWords} />
             </div>
           )}
           {wallets.length > 0 && (
