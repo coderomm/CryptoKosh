@@ -33,7 +33,6 @@ function WalletManager() {
     return savedWallets ? JSON.parse(savedWallets) : [];
   });
   const [blockchain, setBlockchain] = useState<string>(() => localStorage.getItem('blockchain') || '');
-  const [isCopied, setIsCopied] = useState(false)
   const [showPrivateKey, setShowPrivateKey] = useState(false);
   const navigate = useNavigate();
 
@@ -114,18 +113,6 @@ function WalletManager() {
     } catch (error) {
       console.error("Something went wrong while generating the wallet:", error);
       toast.error("Something went wrong while generating the wallet");
-    }
-  }
-
-  const copyMnemonic = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(mnemonicWords.join(' '));
-      setIsCopied(true)
-      setTimeout(() => {
-        setIsCopied(false);
-      }, 2000);
-    } else {
-      toast.error("Clipboard API not supported");
     }
   }
 
@@ -229,8 +216,8 @@ function WalletManager() {
                 <p className="text-white font-semibold text-lg md:text-xl">Save these words in a safe place.</p>
               </div>
               <div className="flex items-center justify-center flex-col md:flex-row gap-3">
-                <input className='bg-transparent border border-[#27272a] rounded-lg py-3 px-[18px] 
-                  w-full text-black' type='password' placeholder='Enter your mnemonic phrase (or leave blank to generate a new one)'
+                <input className='bg-[#09090b] border border-[#27272a] rounded-lg py-3 px-[18px] 
+                  w-full text-white' type='password' placeholder='Enter your mnemonic phrase (or leave blank to generate a new one)'
                   onChange={(e) => {
                     setMnemonicWordsInput(e.target.value)
                   }}
@@ -238,9 +225,9 @@ function WalletManager() {
 
                 <button onClick={() => {
                   handleGenerateMnemonic()
-                }} className="border text-base hover:bg-custom-gradient-none text-white 
-                hover:bg-white font-bold hover:text-black rounded-lg py-3 px-[18px] w-full md:w-64 uppercase text-center">
-                  {mnemonicWordsInput ? 'Add Wallet' : 'Generate Wallet'}
+                }} className="flex items-center justify-center gap-2 border text-sm hover:bg-custom-gradient-none bg-white text-[#18181b]
+                hover:bg-white font-bold hover:text-black rounded-lg py-2 px-[18px] w-full md:w-64 uppercase text-center">
+                  <Plus /> {mnemonicWordsInput ? 'Add Wallet' : 'Generate Wallet'}
                 </button>
               </div>
             </>}
@@ -251,22 +238,12 @@ function WalletManager() {
                 Generated Mnemonic Phrase:
               </h1>
               <p className="text-white font-semibold text-lg md:text-xl">Save these words in a safe place.</p>
-              <button onClick={copyMnemonic} className={`mx-auto shadow-2xl shadow-neutral-800 border text-base bg-custom-gradient text-white 
-              rounded-full py-2 px-[18px] w-full font-bold flex items-center justify-center gap-3 text-center transition-transform 
-              duration-300 hover:bg-custom-gradient-none hover:bg-white hover:text-black md:w-56
-              ${isCopied ? 'opacity-50 cursor-not-allowed bg-custom-gradient-none bg-white text-black scale-105' : 'hover:scale-105'} focus:outline-none`} disabled={isCopied}>
-                {isCopied ? 'Copied!' : (
-                  <>
-                    <Copy />
-                    Click Here To Copy
-                  </>
-                )}
-              </button>
               <CollapsibleMnemonicWords mnemonicWords={mnemonicWords} />
             </div>
           )}
           {wallets.length > 0 && (
-            <><hr />
+            <>
+              <hr />
               <div className="flex flex-col mt-5 gap-4">
                 <div className="flex flex-col md:flex-row gap-5 md:gap-0 items-center justify-between">
                   <h2 className="text-white text-3xl md:text-4xl font-bold capitalize">Your {blockchain} Wallet{wallets.length > 1 ? 's' : ''}</h2>
@@ -281,12 +258,12 @@ function WalletManager() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-1 md:p-4">
                   {wallets.map((wallet, index) => (
-                    <div key={index} className="flex flex-col rounded-2xl border border-black bg-gray-300">
-                      <div className="bg-gray-300 rounded-t-2xl flex justify-between px-6 py-4">
+                    <div key={index} className="flex flex-col rounded-2xl border border-[#434348]">
+                      <div className="rounded-t-2xl flex justify-between p-3 md:px-8 md:py-4 border-b border-[#18181b]">
                         <h3 className="font-bold text-2xl md:text-3xl tracking-tighter">Wallet {index + 1}</h3>
-                        <button onClick={() => removeWallet(index)} className="text-red-500 px-4 py-2" type="button"><Trash /></button>
+                        <button onClick={() => removeWallet(index)} className="text-red-500 p-2" type="button"><Trash /></button>
                       </div>
-                      <div className="bg-white flex flex-col gap-4 p-3 md:px-8 md:py-4 rounded-2xl">
+                      <div className="flex flex-col gap-4 p-3 md:px-8 md:py-4 rounded-2xl">
                         <div className="flex flex-col w-full gap-1">
                           <span className="text-lg md:text-xl font-bold tracking-tighter">Public Key</span>
                           <div className="flex justify-between w-full items-center gap-2">
