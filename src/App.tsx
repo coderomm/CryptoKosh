@@ -6,6 +6,7 @@ import Header from './components/Header'
 import Landing from './pages/Landing'
 import WalletManager from './pages/WalletManager'
 import { Toaster } from 'sonner';
+import TokenLaunchpad from './pages/TokenLaunchpad';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
               <Routes>
                 <Route path='/' element={<Landing />} />
                 <Route path='/generate-mnemonic' element={<WalletManager />} />
+                <Route path='/v2/token-launchpad' element={<TokenLaunchpad />} />
               </Routes>
             </main>
           </section>

@@ -14,11 +14,15 @@ function Header() {
             <header className="flex items-center justify-between border-b border-white text-white backdrop-blur-xl sticky
             rounded-b-[35px] px-3 md:px-20 py-4">
                 <div onClick={handleRedirectToHome} className="flex items-center justify-start gap-1 cursor-pointer">
-                    <img src={CryptoKoshLogo} className='w-10 h-w-10' />
+                    <img src={CryptoKoshLogo} className='w-7 h-7 md:w-10 md:h-w-10' />
                     <h1 className="font-bold text-2xl">CryptoKosh</h1>
                 </div>
-                <div className="flex items-center justify-end">
-                <button
+                <div className="flex items-center justify-start gap-1 md:gap-16">
+                    <a className='text-white text-xl font-semibold' href='/'>Wallets</a>
+                    <a className='text-white text-xl font-semibold' href='/v2/token-launchpad'>Tokens</a>
+                </div>
+                <div className="items-center justify-end hidden">
+                    <button
                         className="flex items-center justify-center gap-2 group text-base bg-custom-gradient hover:bg-custom-gradient-none text-white hover:bg-white hover:fill-black hover:text-black rounded-full py-2 px-[18px]  transition-colors duration-100 ease-out"
                         onClick={handleRedirect}
                     >

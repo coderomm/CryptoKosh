@@ -33,7 +33,7 @@ function WalletManager() {
     return savedWallets ? JSON.parse(savedWallets) : [];
   });
   const [blockchain, setBlockchain] = useState<string>(() => localStorage.getItem('blockchain') || '');
-  const [showPrivateKey, setShowPrivateKey] = useState(false);
+  const [showPrivateKeys, setShowPrivateKeys] = useState<boolean[]>(() => wallets.map(() => false));
   const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
@@ -128,9 +128,13 @@ function WalletManager() {
     }
   }
 
-  const togglePrivateKeyVisibility = () => {
-    setShowPrivateKey(!showPrivateKey);
-  }
+  const togglePrivateKeyVisibility = (index: number) => {
+    setShowPrivateKeys((prevState) => {
+      const newVisibility = [...prevState];
+      newVisibility[index] = !newVisibility[index];
+      return newVisibility;
+    });
+  };
 
   const AddNewWallet = () => {
     if (!mnemonicWords.length) {
@@ -217,7 +221,7 @@ function WalletManager() {
               </div>
               <div className="flex items-center justify-center flex-col md:flex-row gap-3">
                 <input className='bg-[#09090b] border border-[#27272a] rounded-lg py-3 px-[18px] 
-                  w-full text-white' type='password' placeholder='Enter your mnemonic phrase (or leave blank to generate a new one)'
+                    w-full text-white' type='password' placeholder='Enter your mnemonic phrase (or leave blank to generate a new one)'
                   onChange={(e) => {
                     setMnemonicWordsInput(e.target.value)
                   }}
@@ -226,7 +230,7 @@ function WalletManager() {
                 <button onClick={() => {
                   handleGenerateMnemonic()
                 }} className="flex items-center justify-center gap-2 border text-sm hover:bg-custom-gradient-none bg-white text-[#18181b]
-                hover:bg-white font-bold hover:text-black rounded-lg py-2 px-[18px] w-full md:w-64 uppercase text-center">
+                  hover:bg-white font-bold hover:text-black rounded-lg py-2 px-[18px] w-full md:w-64 uppercase text-center">
                   <Plus /> {mnemonicWordsInput ? 'Add Wallet' : 'Generate Wallet'}
                 </button>
               </div>
@@ -249,11 +253,11 @@ function WalletManager() {
                   <h2 className="text-white text-3xl md:text-4xl font-bold capitalize">Your {blockchain} Wallet{wallets.length > 1 ? 's' : ''}</h2>
                   <div className="flex items-center justify-center gap-3">
                     <button onClick={AddNewWallet} className='bg-white text-black rounded-full text- md:text-base px-4 py-2 font-bold
-                  shadow-2xl shadow-neutral-800 hover:bg-white 
-                  transition-all duration-200 ease-out flex items-center justify-center gap-2'><Plus /> Add Wallet</button>
+                    shadow-2xl shadow-neutral-800 hover:bg-white 
+                    transition-all duration-200 ease-out flex items-center justify-center gap-2'><Plus /> Add Wallet</button>
                     <button onClick={removeAllWallets} className='bg-white text-black rounded-full text- md:text-base px-4 py-2 font-bold
-                  shadow-2xl shadow-neutral-800 hover:bg-white 
-                  transition-all duration-200 ease-out flex items-center justify-center gap-2'><Trash /> Clear Wallets</button>
+                    shadow-2xl shadow-neutral-800 hover:bg-white 
+                    transition-all duration-200 ease-out flex items-center justify-center gap-2'><Trash /> Clear Wallets</button>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-1 md:p-4">
@@ -268,7 +272,7 @@ function WalletManager() {
                           <span className="text-lg md:text-xl font-bold tracking-tighter">Public Key</span>
                           <div className="flex justify-between w-full items-center gap-2">
                             <p onClick={() => handleCopyKey(wallet.privateKey)} className="text-primary/80 font-medium cursor-pointer hover:text-primary transition-all duration-300 truncate 
-                    overflow-hidden">{wallet.publicKey}</p>
+                      overflow-hidden">{wallet.publicKey}</p>
                             <button onClick={() => handleCopyKey(wallet.publicKey)} className="p-2">
                               <Copy className='transition-transform transform active:scale-95' />
                             </button>
@@ -278,11 +282,11 @@ function WalletManager() {
                           <span className="text-lg md:text-xl font-bold tracking-tighter">Private Key</span>
                           <div className="flex justify-between w-full items-center gap-2">
                             <p onClick={() => handleCopyKey(wallet.privateKey)} className="text-primary/80 font-medium cursor-pointer hover:text-primary transition-all duration-300 truncate">
-                              {showPrivateKey ? wallet.privateKey : '•••••••••••••••••••••••••••••••••••••••••••••••••••'}
+                              {showPrivateKeys[index] ? wallet.privateKey : '•••••••••••••••••••••••••••••••••••••••••••••••••••'}
                             </p>
                             <div className="flex items-center justify-center gap-1">
-                              <button onClick={togglePrivateKeyVisibility} className="p-1 md:p-2">
-                                {showPrivateKey ? <Eye /> : <EyeOff />}
+                              <button onClick={() => togglePrivateKeyVisibility(index)} className="p-1 md:p-2">
+                                {showPrivateKeys[index] ? <EyeOff /> : <Eye />}
                               </button>
                               <button onClick={() => handleCopyKey(wallet.privateKey)} className="p-1 md:p-2"><Copy className='transition-transform transform active:scale-95' /></button>
                             </div>
